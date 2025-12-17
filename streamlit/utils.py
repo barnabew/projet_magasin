@@ -21,11 +21,7 @@ def load_csv_data():
     for table_name, file_path in CSV_PATHS.items():
         if os.path.exists(file_path):
             data[table_name] = pd.read_csv(file_path)
-            st.success(f"✅ {table_name}.csv chargé avec succès")
         else:
-            st.error(f"❌ Fichier {file_path} introuvable !")
-            st.error(f"Répertoire courant: {os.getcwd()}")
-            st.error(f"Chemin utils.py: {CURRENT_DIR}")
             return None
     
     return data
