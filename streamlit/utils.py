@@ -3,11 +3,14 @@ import streamlit as st
 import os
 import pandasql as psql
 
+# Obtenir le répertoire du fichier utils.py
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Chemins vers les fichiers CSV nettoyés dans le dossier data
 CSV_PATHS = {
-    "sales": "data/sales_clean.csv",
-    "stores": "data/stores_clean.csv",
-    "features": "data/features_clean.csv"
+    "sales": os.path.join(CURRENT_DIR, "data", "sales_clean.csv"),
+    "stores": os.path.join(CURRENT_DIR, "data", "stores_clean.csv"),
+    "features": os.path.join(CURRENT_DIR, "data", "features_clean.csv")
 }
 
 
@@ -18,8 +21,11 @@ def load_csv_data():
     for table_name, file_path in CSV_PATHS.items():
         if os.path.exists(file_path):
             data[table_name] = pd.read_csv(file_path)
+            st.success(f"✅ {table_name}.csv chargé avec succès")
         else:
-            st.error(f"Fichier {file_path} introuvable !")
+            st.error(f"❌ Fichier {file_path} introuvable !")
+            st.error(f"Répertoire courant: {os.getcwd()}")
+            st.error(f"Chemin utils.py: {CURRENT_DIR}")
             return None
     
     return data
