@@ -1,65 +1,41 @@
 import sqlite3
 import pandas as pd
 import streamlit as st
+import requests
 import os
 
-DB_PATH = "retail.db"
+DB_PATH = "olist.db"
+DB_URL = "https://huggingface.co/datasets/showbave/olist-db/resolve/main/olist.db"
+
+
+@st.cache_resource
+def download_database_once():
+    """Télécharge la DB une seule fois par session Streamlit."""
+    if not os.path.exists(DB_PATH) or os.path.getsize(DB_PATH) < 5000000:
+        with st.spinner("📥 Downloading olist.db from HuggingFace…"):
+            r = requests.get(DB_URL)
+            open(DB_PATH, "wb").write(r.content)
+
+    return True
+
 
 def get_connection():
-    """Retourne une connexion à la base de données retail"""
-    if not os.path.exists(DB_PATH):
-        st.error(f"Base de données {DB_PATH} non trouvée. Veuillez d'abord exécuter le notebook pour créer la base.")
-        st.stop()
-    
+    # Télécharge la DB si nécessaire (une seule fois grâce au cache)
+    download_database_once()
     return sqlite3.connect(DB_PATH)
 
 
 @st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def run_query(query):
-    """Exécute une requête SQL et retourne un DataFrame"""
     conn = get_connection()
-    try:
-        df = pd.read_sql(query, conn)
-        return df
-    except Exception as e:
-        st.error(f"Erreur lors de l'exécution de la requête: {e}")
-        return pd.DataFrame()
-    finally:
-        conn.close()
+    df = pd.read_sql(query, conn)
+    conn.close()
+    return df
 
 
 @st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def load_table(table_name):
-    """Charge une table complète"""
     conn = get_connection()
-    try:
-        df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
-        return df
-    except Exception as e:
-        st.error(f"Erreur lors du chargement de la table {table_name}: {e}")
-        return pd.DataFrame()
-    finally:
-        conn.close()
-
-
-def check_database():
-    """Vérifie l'existence et la validité de la base de données"""
-    if not os.path.exists(DB_PATH):
-        return False, "Base de données non trouvée"
-    
-    try:
-        conn = get_connection()
-        tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
-        required_tables = ['sales', 'stores', 'features']
-        
-        missing_tables = [table for table in required_tables if table not in tables['name'].values]
-        
-        conn.close()
-        
-        if missing_tables:
-            return False, f"Tables manquantes: {missing_tables}"
-        
-        return True, "Base de données OK"
-    
-    except Exception as e:
-        return False, f"Erreur de connexion: {e}"
+    df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
+    conn.close()
+    return df
