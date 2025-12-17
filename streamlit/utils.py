@@ -30,6 +30,10 @@ def run_query(query):
     """Exécute une requête SQL sur les DataFrames pandas."""
     data = load_csv_data()
     
+    if data is None:
+        st.error("Impossible de charger les données CSV !")
+        return pd.DataFrame()
+    
     # Met les DataFrames à disposition pour la requête SQL
     sales = data['sales']
     stores = data['stores']  
@@ -44,6 +48,15 @@ def run_query(query):
 def load_table(table_name):
     """Charge une table complète."""
     data = load_csv_data()
+    
+    if data is None:
+        st.error("Impossible de charger les données CSV !")
+        return pd.DataFrame()
+        
+    if table_name not in data:
+        st.error(f"Table '{table_name}' introuvable !")
+        return pd.DataFrame()
+        
     return data[table_name]
 
 
