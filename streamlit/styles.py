@@ -463,9 +463,9 @@ def render_navbar(st, current_page="resume"):
     # Configuration des pages
     pages = [
         ("resume", "Résumé", col1, "accueil.py"),
-        ("geographique", "Géographique", col2, "pages/2_geographique.py"),
-        ("produit", "Produits", col3, "pages/3_produit.py"),
-        ("recommandations", "Recommandations", col4, "pages/5_recommandations.py")
+        ("geographique", "Géographique", col2, "pages/2_magasins.py"),
+        ("produit", "Produits", col3, "pages/3_departement.py"),
+        ("recommandations", "Recommandations", col4, "pages/5_temporel.py")
     ]
     
     # Afficher les boutons
@@ -485,3 +485,4 @@ def render_navbar(st, current_page="resume"):
     
     # Fermer le wrapper
     st.markdown('</div>', unsafe_allow_html=True)
+
