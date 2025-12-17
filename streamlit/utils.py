@@ -14,20 +14,28 @@ CSV_PATHS = {
 }
 
 
-@st.cache_data(ttl=3600)  # Cache pendant 1 heure
+@st.cache_resource  # Cache persistant pour toute la session
 def load_csv_data():
     """Charge tous les fichiers CSV nettoyés depuis le dossier data."""
     data = {}
+    missing_files = []
+    
     for table_name, file_path in CSV_PATHS.items():
         if os.path.exists(file_path):
             data[table_name] = pd.read_csv(file_path)
         else:
-            return None
+            missing_files.append(f"{table_name}: {file_path}")
+    
+    if missing_files:
+        for missing in missing_files:
+            st.error(f"❌ Fichier introuvable: {missing}")
+        st.error(f"Répertoire courant: {os.getcwd()}")
+        st.error(f"Chemin utils.py: {CURRENT_DIR}")
+        return None
     
     return data
 
 
-@st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def run_query(query):
     """Exécute une requête SQL sur les DataFrames pandas."""
     data = load_csv_data()
@@ -46,7 +54,6 @@ def run_query(query):
     return result
 
 
-@st.cache_data(ttl=3600)  # Cache pendant 1 heure
 def load_table(table_name):
     """Charge une table complète."""
     data = load_csv_data()
