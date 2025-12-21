@@ -15,49 +15,40 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="resume")
 
-# Objectif du Dashboard
-with st.expander("🎯 Comprendre l'Écosystème Retail", expanded=True):
-    st.markdown("""
-    **Retail Analytics Dashboard** - Tableau de bord stratégique pour optimiser les performances de votre écosystème retail
-    
-    **🏪 Contexte**: Analyse de 45 magasins répartis en 3 typologies (A, B, C) sur 81 départements
-    
-    **💼 Objectifs Business**:
-    - 📊 **Optimiser l'assortiment** départemental par typologie de magasin
-    - 📈 **Identifier les leviers saisonniers** pour maximiser les ventes en fin d'année
-    - 🎯 **Développer des stratégies différenciées** selon la taille et le type des magasins
-    - 💰 **Améliorer la rentabilité** par une allocation optimale des ressources
-    
-    **📋 Navigation**:
-    - **Magasins**: Typologie et performances par taille
-    - **Départements**: Segmentation et stratégies d'assortiment
-    - **Temporel**: Saisonnalité et pic de performance
-    - **Recommandations**: Actions prioritaires pour les décideurs
-    """)
+# Titre principal
+st.markdown("# Dashboard Retail Intelligence")
+
+# Contexte et objectifs simplifiés
+st.markdown("""
+**Analyse stratégique de 45 magasins répartis en 3 typologies sur 81 départements**
+
+**Objectifs**: Optimiser l'assortiment, identifier les leviers saisonniers et améliorer la rentabilité par une allocation optimale des ressources.
+""")
 
 st.markdown("---")
 
-# Insights business en tête
-st.markdown("## 📈 Résumé Exécutif")
+# Résumé Exécutif
+st.markdown("## Résumé Exécutif")
 
+# Faits marquants
 insights_cols = st.columns(2)
 
 with insights_cols[0]:
     st.markdown("""
-    ### 🏆 **Faits Marquants**
-    - **Type A**: Grands magasins avec 40% d'augmentation en décembre
-    - **Effet taille**: Corrélation forte entre surface et performance (r=0.85+)
-    - **Top départements**: 10 départements génèrent 65% du surplus de décembre
-    - **Opportunité**: Potentiel d'amélioration estimé à +12% CA annuel
+    ### **Faits Marquants**
+    - Type A: Grands magasins avec 40% d'augmentation en décembre
+    - Effet taille: Corrélation forte entre surface et performance
+    - Top départements: 10 départements génèrent 65% du surplus de décembre
+    - Opportunité: Potentiel d'amélioration estimé à +12% CA annuel
     """)
 
 with insights_cols[1]:
     st.markdown("""
-    ### ⚡ **Actions Prioritaires**
-    1. **Renforcer** l'assortiment des départements saisonniers dans les Type A
-    2. **Standardiser** les meilleures pratiques des Type A vers Type C
-    3. **Optimiser** la gestion des stocks pour les pics de décembre
-    4. **Développer** les départements spécialisés à fort ROI
+    ### **Actions Prioritaires**
+    1. Renforcer l'assortiment des départements saisonniers dans les Type A
+    2. Standardiser les meilleures pratiques des Type A vers Type C
+    3. Optimiser la gestion des stocks pour les pics de décembre
+    4. Développer les départements spécialisés à fort ROI
     """)
 
 st.markdown("---")
@@ -85,13 +76,13 @@ with kpi_cols[3]:
 
 st.markdown("---")
 
-# Graphiques business orientés décideurs
-st.markdown("## 📊 Vue d'Ensemble Business")
+# Graphiques business
+st.markdown("## Vue d'Ensemble Business")
 
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    st.markdown("### 💰 Performance Exécutive par Type")
+    st.markdown("### Performance par Type")
     # Performance executive avec métriques business
     df_exec_perf = run_query(queries.QUERY_PERFORMANCE_EXECUTIVE)
     
@@ -123,7 +114,7 @@ with chart_row1[0]:
         st.metric("Type C - CA/Magasin", f"${df_exec_perf[df_exec_perf['Type']=='C']['CA_Par_Magasin'].iloc[0]:,.0f}")
 
 with chart_row1[1]:
-    st.markdown("### 📈 Saisonnalité Business")
+    st.markdown("### Saisonnalité Business")
     # Analyse saisonnière avec indicateurs business
     df_saison = run_query(queries.QUERY_SAISONNALITE_BUSINESS)
     
@@ -147,12 +138,12 @@ with chart_row1[1]:
     
     # Insight décembre
     decembre_pct = df_saison[df_saison['Nom_Mois']=='Décembre']['Pct_Vs_Moyenne'].iloc[0]
-    st.success(f"🎯 **Pic de décembre**: +{decembre_pct}% vs moyenne annuelle")
+    st.success(f"**Pic de décembre**: +{decembre_pct}% vs moyenne annuelle")
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    st.markdown("### 🎯 Top Opportunités Départements")
+    st.markdown("### Top Opportunités Départements")
     # Top opportunités business
     df_opport = run_query(queries.QUERY_DEPARTEMENTS_OPPORTUNITE)
     
@@ -173,7 +164,7 @@ with chart_row2[0]:
         st.plotly_chart(fig_opport, use_container_width=True)
         
         # Top 3 opportunités
-        st.markdown("**🏆 Top 3 Opportunités**:")
+        st.markdown("**Top 3 Opportunités**:")
         for i in range(min(3, len(df_opport))):
             dept = df_opport.iloc[i]
             st.write(f"• **Dept {dept['Dept']}**: +${dept['Potentiel_CA_Supplementaire']:,.0f} (+{dept['Pct_Amelioration']}%)")
@@ -181,7 +172,7 @@ with chart_row2[0]:
         st.info("Aucune opportunité majeure identifiée selon les critères actuels")
 
 with chart_row2[1]:
-    st.markdown("### ⚖️ ROI par Taille de Magasin")
+    st.markdown("### ROI par Taille de Magasin")
     # ROI par taille
     df_roi = run_query(queries.QUERY_ROI_TAILLE)
     
@@ -204,27 +195,27 @@ with chart_row2[1]:
     
     # Insight ROI
     best_roi = df_roi.loc[df_roi['ROI_Moyen_Par_1000_Sqft'].idxmax()]
-    st.info(f"💡 **Meilleur ROI**: {best_roi['Categorie_Taille']} magasins (${best_roi['ROI_Moyen_Par_1000_Sqft']}/1000 sqft)")
+    st.info(f"**Meilleur ROI**: {best_roi['Categorie_Taille']} magasins (${best_roi['ROI_Moyen_Par_1000_Sqft']}/1000 sqft)")
 
 st.markdown("---")
 
-# Section recommandations business
-st.markdown("## 🚀 Recommandations Stratégiques")
+# Recommandations
+st.markdown("## Recommandations Stratégiques")
 
 rec_cols = st.columns(3)
 
 with rec_cols[0]:
     st.markdown("""
-    ### 📊 **Court Terme (0-6 mois)**
-    - Optimiser les stocks des départements TOP 10 pour décembre
-    - Renforcer marketing fin d'année pour magasins Type A
+    ### **Court Terme (0-6 mois)**
+    - Optimiser stocks départements TOP 10 pour décembre
+    - Renforcer marketing fin d'année Type A
     - Ajuster assortiment Type B selon modèle Type A
     - Former équipes sur départements à fort potentiel
     """)
 
 with rec_cols[1]:
     st.markdown("""
-    ### 🎯 **Moyen Terme (6-18 mois)**
+    ### **Moyen Terme (6-18 mois)**
     - Déployer départements high-performers dans Type C
     - Standardiser processus Type A vers autres types
     - Développer programme fidélité saisonnalité
@@ -233,39 +224,10 @@ with rec_cols[1]:
 
 with rec_cols[2]:
     st.markdown("""
-    ### 🏗️ **Long Terme (18+ mois)**
+    ### **Long Terme (18+ mois)**
     - Étudier extension magasins Type C performants
     - Repositionner départements sous-performants
     - Développer nouveaux concepts Type A+
     - Implémenter IA pour optimisation continue
     """)
 
-with chart_row2[0]:
-    # Top départements par CA
-    df_top_depts = run_query(queries.QUERY_TOP_DEPARTMENTS)
-    
-    fig_top_depts = px.bar(
-        df_top_depts.head(10),
-        x="CA_Total",
-        y="Dept",
-        orientation="h",
-        title="Top 10 Départements par CA Total",
-        labels={"CA_Total": "Chiffre d'affaires ($)", "Dept": "Département"}
-    )
-    visuel.apply_theme(fig_top_depts)
-    st.plotly_chart(fig_top_depts, use_container_width=True)
-
-with chart_row2[1]:
-    # Évolution temporelle globale
-    df_evolution = run_query(queries.QUERY_EVOLUTION_MENSUELLE)
-    
-    fig_evolution = px.line(
-        df_evolution,
-        x="Mois",
-        y="CA_Total_Mensuel",
-        title="Évolution du CA Mensuel",
-        labels={"Mois": "Mois", "CA_Total_Mensuel": "CA Total Mensuel ($)"},
-        markers=True
-    )
-    visuel.apply_theme(fig_evolution)
-    st.plotly_chart(fig_evolution, use_container_width=True)
