@@ -27,6 +27,19 @@ SELECT COUNT(DISTINCT Dept) AS Nb_Departements
 FROM sales;
 """
 
+# Requête KPI globaux complète du notebook
+QUERY_KPI_GLOBAUX = """
+SELECT 
+    ROUND(SUM(Weekly_Sales), 2) AS CA_Total,
+    ROUND(AVG(Weekly_Sales), 2) AS CA_Moyen,
+    COUNT(*) AS Total_Observations,
+    COUNT(DISTINCT Store) AS Nb_Magasins,
+    COUNT(DISTINCT Dept) AS Nb_Departements,
+    MIN(DATE(Date)) AS Date_Debut,
+    MAX(DATE(Date)) AS Date_Fin
+FROM sales;
+"""
+
 # ===================
 # ANALYSES MAGASINS
 # ===================
@@ -110,6 +123,39 @@ SELECT
 FROM dept_presence
 GROUP BY Categorie
 ORDER BY CA_Moyen_Dept DESC;
+"""
+
+# Requête complète de segmentation avec CA par magasin du notebook
+QUERY_SEGMENTATION_COMPLETE = """
+WITH dept_presence AS (
+    SELECT 
+        Dept,
+        COUNT(DISTINCT Store) as Nb_Magasins,
+        ROUND(COUNT(DISTINCT Store) * 100.0 / 
+              (SELECT COUNT(DISTINCT Store) FROM sales), 1) AS Taux_Presence,
+        ROUND(SUM(Weekly_Sales), 2) AS CA_Total,
+        ROUND(SUM(Weekly_Sales) / COUNT(DISTINCT Store), 2) AS CA_Moyen_Par_Magasin,
+        CASE 
+            WHEN COUNT(DISTINCT Store) * 100.0 / 
+                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 90 THEN 'Universel'
+            WHEN COUNT(DISTINCT Store) * 100.0 / 
+                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 70 THEN 'Courant' 
+            WHEN COUNT(DISTINCT Store) * 100.0 / 
+                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 40 THEN 'Sélectif'
+            ELSE 'Spécialisé'
+        END AS Categorie
+    FROM sales
+    GROUP BY Dept
+)
+SELECT 
+    Categorie,
+    COUNT(*) as Nb_Depts,
+    ROUND(AVG(Taux_Presence), 1) as Taux_Moyen,
+    ROUND(AVG(CA_Total), 0) as Moyenne_CA_Total,
+    ROUND(AVG(CA_Moyen_Par_Magasin), 0) as Moyenne_CA_Par_Magasin
+FROM dept_presence
+GROUP BY Categorie
+ORDER BY Moyenne_CA_Total DESC;
 """
 
 def get_query_departements_champions(min_presence):
@@ -217,6 +263,33 @@ GROUP BY Mois, Nom_Mois
 ORDER BY Mois;
 """
 
+# Requête du notebook avec noms de mois complets
+QUERY_EVOLUTION_BY_TYPE_COMPLET = """
+WITH type_monthly AS (
+    SELECT 
+        s.Type,
+        CAST(strftime('%m', sa.Date) as INTEGER) as Mois,
+        ROUND(SUM(sa.Weekly_Sales) / COUNT(*), 2) as CA_Moyen_Hebdo,
+        CASE CAST(strftime('%m', sa.Date) as INTEGER)
+            WHEN 1 THEN 'Janvier' WHEN 2 THEN 'Février' WHEN 3 THEN 'Mars'
+            WHEN 4 THEN 'Avril' WHEN 5 THEN 'Mai' WHEN 6 THEN 'Juin'
+            WHEN 7 THEN 'Juillet' WHEN 8 THEN 'Août' WHEN 9 THEN 'Septembre'
+            WHEN 10 THEN 'Octobre' WHEN 11 THEN 'Novembre' WHEN 12 THEN 'Décembre'
+        END as Nom_Mois
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    GROUP BY s.Type, strftime('%m', sa.Date)
+)
+SELECT 
+    Nom_Mois,
+    SUM(CASE WHEN Type = 'A' THEN CA_Moyen_Hebdo END) as Type_A,
+    SUM(CASE WHEN Type = 'B' THEN CA_Moyen_Hebdo END) as Type_B,
+    SUM(CASE WHEN Type = 'C' THEN CA_Moyen_Hebdo END) as Type_C
+FROM type_monthly
+GROUP BY Mois
+ORDER BY Mois;
+"""
+
 def get_query_departements_saisonniers(seuil_variation):
     return f"""
     WITH dept_monthly AS (
@@ -281,6 +354,138 @@ def get_query_evolution_top_depts(dept_list):
     """
 
 # ===================
+# ANALYSES SAISONNIÈRES SPÉCIALISÉES
+# ===================
+
+# Analyse des variations décembre vs année (du notebook)
+QUERY_VARIATION_DECEMBRE_TYPE_A = """
+WITH dept_stats AS (
+    SELECT 
+        sa.Dept,
+        ROUND(SUM(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN sa.Weekly_Sales ELSE 0 END) / 
+              NULLIF(COUNT(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN 1 END), 0), 2) as CA_Moyen_Hebdo_Decembre,
+        ROUND(SUM(sa.Weekly_Sales) / COUNT(*), 2) as CA_Moyen_Hebdo_Annee
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    WHERE s.Type = 'A'
+    GROUP BY sa.Dept
+),
+ranked_stats AS (
+    SELECT 
+        Dept,
+        ROUND(CA_Moyen_Hebdo_Decembre - CA_Moyen_Hebdo_Annee, 2) as Difference_Decembre_Annee,
+        ROW_NUMBER() OVER (ORDER BY (CA_Moyen_Hebdo_Decembre - CA_Moyen_Hebdo_Annee) DESC) as rang_desc,
+        ROW_NUMBER() OVER (ORDER BY (CA_Moyen_Hebdo_Decembre - CA_Moyen_Hebdo_Annee) ASC) as rang_asc
+    FROM dept_stats
+    WHERE CA_Moyen_Hebdo_Annee IS NOT NULL
+)
+SELECT 
+    'TOP 10' as Groupe,
+    ROUND(SUM(Difference_Decembre_Annee), 2) as Somme_Differences,
+    COUNT(*) as Nb_Departements
+FROM ranked_stats
+WHERE rang_desc <= 10
+
+UNION ALL
+
+SELECT 
+    'TOP 20' as Groupe,
+    ROUND(SUM(Difference_Decembre_Annee), 2) as Somme_Differences,
+    COUNT(*) as Nb_Departements
+FROM ranked_stats
+WHERE rang_desc <= 20
+
+UNION ALL
+
+SELECT 
+    'Negatif' as Groupe,
+    ROUND(SUM(Difference_Decembre_Annee), 2) as Somme_Differences,
+    COUNT(*) as Nb_Departements
+FROM ranked_stats
+WHERE Difference_Decembre_Annee < 0
+
+UNION ALL
+
+SELECT 
+    'Le reste' as Groupe,
+    ROUND(SUM(Difference_Decembre_Annee), 2) as Somme_Differences,
+    COUNT(*) as Nb_Departements
+FROM ranked_stats
+WHERE Difference_Decembre_Annee > 0 AND rang_desc > 20;
+"""
+
+# Top 10 des départements avec plus forte variation décembre (du notebook)
+QUERY_TOP10_VARIATION_DECEMBRE = """
+WITH dept_stats AS (
+    SELECT 
+        sa.Dept,
+        ROUND(SUM(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN sa.Weekly_Sales ELSE 0 END) / 
+              NULLIF(COUNT(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN 1 END), 0), 2) as CA_Moyen_Hebdo_Decembre,
+        ROUND(SUM(sa.Weekly_Sales) / COUNT(*), 2) as CA_Moyen_Hebdo_Annee
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    WHERE s.Type = 'A'
+    GROUP BY sa.Dept
+),
+ranked_stats AS (
+    SELECT 
+        Dept,
+        CA_Moyen_Hebdo_Decembre,
+        CA_Moyen_Hebdo_Annee,
+        ROW_NUMBER() OVER (ORDER BY (CA_Moyen_Hebdo_Decembre - CA_Moyen_Hebdo_Annee) DESC) as rang_desc
+    FROM dept_stats
+    WHERE CA_Moyen_Hebdo_Annee IS NOT NULL
+)
+SELECT 
+    Dept as Departement
+FROM ranked_stats
+WHERE rang_desc <= 10
+ORDER BY rang_desc;
+"""
+
+# Récupération dynamique du top 10 pour graphiques
+QUERY_GET_TOP10_DEPTS = """
+WITH dept_stats AS (
+    SELECT 
+        sa.Dept,
+        ROUND(SUM(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN sa.Weekly_Sales ELSE 0 END) / 
+              NULLIF(COUNT(CASE WHEN CAST(strftime('%m', sa.Date) as INTEGER) = 12 THEN 1 END), 0), 2) as CA_Moyen_Hebdo_Decembre,
+        ROUND(SUM(sa.Weekly_Sales) / COUNT(*), 2) as CA_Moyen_Hebdo_Annee
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    WHERE s.Type = 'A'
+    GROUP BY sa.Dept
+),
+ranked_stats AS (
+    SELECT 
+        Dept,
+        ROW_NUMBER() OVER (ORDER BY (CA_Moyen_Hebdo_Decembre - CA_Moyen_Hebdo_Annee) DESC) as rang_desc
+    FROM dept_stats
+    WHERE CA_Moyen_Hebdo_Annee IS NOT NULL
+)
+SELECT Dept
+FROM ranked_stats
+WHERE rang_desc <= 10
+ORDER BY rang_desc;
+"""
+
+# ===================
+# VISUALISATIONS
+# ===================
+
+# Requête pour les heatmaps (du notebook)
+QUERY_HEATMAP_DATA = """
+SELECT 
+    s.Type,
+    sa.Store,
+    sa.Dept,
+    ROUND(SUM(sa.Weekly_Sales), 2) AS CA_Total
+FROM sales sa
+JOIN stores s ON sa.Store = s.Store
+GROUP BY s.Type, sa.Store, sa.Dept;
+"""
+
+# ===================
 # PROMOTIONS
 # ===================
 
@@ -297,4 +502,139 @@ SELECT
 FROM features f
 JOIN sales sa ON f.Store = sa.Store AND f.Date = sa.Date
 GROUP BY Statut_Promo;
+"""
+
+# ===================
+# ANALYSES BUSINESS DÉCIDEURS
+# ===================
+
+# Performance comparative détaillée par type
+QUERY_PERFORMANCE_EXECUTIVE = """
+WITH type_performance AS (
+    SELECT 
+        s.Type,
+        COUNT(DISTINCT s.Store) AS Nb_Magasins,
+        ROUND(AVG(s.Size), 0) AS Taille_Moyenne,
+        ROUND(SUM(sa.Weekly_Sales), 0) AS CA_Total,
+        ROUND(AVG(sa.Weekly_Sales), 0) AS CA_Moyen_Hebdo,
+        ROUND(SUM(sa.Weekly_Sales) / COUNT(DISTINCT s.Store), 0) AS CA_Par_Magasin,
+        ROUND(SUM(sa.Weekly_Sales) / SUM(s.Size) * 1000, 2) AS CA_Par_1000_Sqft
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    GROUP BY s.Type
+)
+SELECT 
+    Type,
+    Nb_Magasins,
+    Taille_Moyenne,
+    CA_Total,
+    CA_Moyen_Hebdo,
+    CA_Par_Magasin,
+    CA_Par_1000_Sqft,
+    ROUND(CA_Total * 100.0 / (SELECT SUM(CA_Total) FROM type_performance), 1) AS Part_CA_Pct
+FROM type_performance
+ORDER BY CA_Total DESC;
+"""
+
+# Top départements avec potentiel d'amélioration
+QUERY_DEPARTEMENTS_OPPORTUNITE = """
+WITH dept_analysis AS (
+    SELECT 
+        sa.Dept,
+        COUNT(DISTINCT sa.Store) as Nb_Magasins_Actuels,
+        (SELECT COUNT(DISTINCT Store) FROM sales) as Total_Magasins,
+        ROUND(SUM(sa.Weekly_Sales), 0) AS CA_Actuel,
+        ROUND(AVG(sa.Weekly_Sales), 0) AS CA_Moyen,
+        ROUND(COUNT(DISTINCT sa.Store) * 100.0 / 
+              (SELECT COUNT(DISTINCT Store) FROM sales), 1) AS Taux_Penetration
+    FROM sales sa
+    GROUP BY sa.Dept
+),
+potential_calc AS (
+    SELECT 
+        *,
+        CASE 
+            WHEN Taux_Penetration < 80 AND CA_Moyen > 15000 THEN 
+                ROUND((Total_Magasins - Nb_Magasins_Actuels) * CA_Moyen * 0.7, 0)
+            ELSE 0
+        END AS Potentiel_CA_Supplementaire
+    FROM dept_analysis
+)
+SELECT 
+    Dept,
+    Nb_Magasins_Actuels,
+    Taux_Penetration,
+    CA_Actuel,
+    CA_Moyen,
+    Potentiel_CA_Supplementaire,
+    ROUND(Potentiel_CA_Supplementaire * 100.0 / CA_Actuel, 1) AS Pct_Amelioration
+FROM potential_calc
+WHERE Potentiel_CA_Supplementaire > 0
+ORDER BY Potentiel_CA_Supplementaire DESC
+LIMIT 10;
+"""
+
+# Analyse de la corrélation taille-performance pour insights décideurs
+QUERY_ROI_TAILLE = """
+WITH size_buckets AS (
+    SELECT 
+        sa.Store,
+        s.Type,
+        s.Size,
+        CASE 
+            WHEN s.Size < 100000 THEN 'Petit'
+            WHEN s.Size < 150000 THEN 'Moyen'
+            ELSE 'Grand'
+        END AS Categorie_Taille,
+        ROUND(AVG(sa.Weekly_Sales), 0) AS CA_Moyen,
+        ROUND(AVG(sa.Weekly_Sales) / s.Size * 1000, 2) AS ROI_Par_1000_Sqft
+    FROM sales sa
+    JOIN stores s ON sa.Store = s.Store
+    GROUP BY sa.Store, s.Type, s.Size
+)
+SELECT 
+    Categorie_Taille,
+    COUNT(*) AS Nb_Magasins,
+    ROUND(AVG(Size), 0) AS Taille_Moyenne,
+    ROUND(AVG(CA_Moyen), 0) AS CA_Moyen,
+    ROUND(AVG(ROI_Par_1000_Sqft), 2) AS ROI_Moyen_Par_1000_Sqft,
+    ROUND(MIN(ROI_Par_1000_Sqft), 2) AS ROI_Min,
+    ROUND(MAX(ROI_Par_1000_Sqft), 2) AS ROI_Max
+FROM size_buckets
+GROUP BY Categorie_Taille
+ORDER BY Taille_Moyenne DESC;
+"""
+
+# Analyse saisonnière business-friendly
+QUERY_SAISONNALITE_BUSINESS = """
+WITH monthly_performance AS (
+    SELECT 
+        CAST(strftime('%m', Date) as INTEGER) as Mois,
+        CASE CAST(strftime('%m', Date) as INTEGER)
+            WHEN 1 THEN 'Janvier' WHEN 2 THEN 'Février' WHEN 3 THEN 'Mars'
+            WHEN 4 THEN 'Avril' WHEN 5 THEN 'Mai' WHEN 6 THEN 'Juin'
+            WHEN 7 THEN 'Juillet' WHEN 8 THEN 'Août' WHEN 9 THEN 'Septembre'
+            WHEN 10 THEN 'Octobre' WHEN 11 THEN 'Novembre' WHEN 12 THEN 'Décembre'
+        END as Nom_Mois,
+        ROUND(SUM(Weekly_Sales), 0) as CA_Total,
+        COUNT(*) as Nb_Semaines
+    FROM sales
+    GROUP BY strftime('%m', Date)
+),
+avg_calc AS (
+    SELECT AVG(CA_Total) as CA_Moyen_Mensuel FROM monthly_performance
+)
+SELECT 
+    mp.Nom_Mois,
+    mp.CA_Total,
+    ROUND(mp.CA_Total - ac.CA_Moyen_Mensuel, 0) AS Ecart_Moyenne,
+    ROUND((mp.CA_Total - ac.CA_Moyen_Mensuel) * 100.0 / ac.CA_Moyen_Mensuel, 1) AS Pct_Vs_Moyenne,
+    CASE 
+        WHEN mp.CA_Total > ac.CA_Moyen_Mensuel * 1.15 THEN '🔥 Très Fort'
+        WHEN mp.CA_Total > ac.CA_Moyen_Mensuel * 1.05 THEN '📈 Fort'
+        WHEN mp.CA_Total > ac.CA_Moyen_Mensuel * 0.95 THEN '➖ Moyen'
+        ELSE '📉 Faible'
+    END AS Performance
+FROM monthly_performance mp, avg_calc ac
+ORDER BY mp.Mois;
 """
