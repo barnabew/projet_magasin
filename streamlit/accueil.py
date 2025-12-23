@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
 import queries
-from styles import get_page_config, get_custom_css, render_navbar
+from styles import get_page_config, get_custom_css, render_navbar, render_kpi_card
 import visuel
 
 # Configuration de la page
@@ -30,16 +30,16 @@ kpi_df = run_query(queries.QUERY_KPI_GLOBAUX)
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric("💰 CA Total", f"${kpi_df['CA_Total'][0]/1_000_000:.2f}M")
+    st.markdown(render_kpi_card("💰 CA Total", f"${kpi_df['CA_Total'][0]/1_000_000:.2f}M"),unsafe_allow_html=True)
     
 with col2:
-    st.metric("🏪 Magasins", kpi_df['Nb_Magasins'][0])
+    st.markdown(render_kpi_card("🏪 Magasins", f"{kpi_df['Nb_Magasins'][0]}"),unsafe_allow_html=True)
     
 with col3:
-    st.metric("📦 Départements", kpi_df['Nb_Departements'][0])
+    st.markdown(render_kpi_card("📦 Départements", f"{kpi_df['Nb_Departements'][0]}"),unsafe_allow_html=True)
     
 with col4:
-    st.metric("📅 Période", f"{kpi_df['Date_Debut'][0][:4]} - {kpi_df['Date_Fin'][0][:4]}")
+    st.markdown(render_kpi_card("📅 Période", f"{kpi_df['Date_Debut'][0][:4]} - {kpi_df['Date_Fin'][0][:4]}"),unsafe_allow_html=True)
 
 
 
