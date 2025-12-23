@@ -24,8 +24,7 @@ st.markdown("textes.Accueil_Intro")
 st.markdown("---")
 st.markdown("### KPI Globaux")
 
-kpi_df = pd.read_sql(QUERY_KPI_GLOBAUX, get_connection())
-conn.close()
+kpi_df = run_query(QUERY_KPI_GLOBAUX)
 
 # Extraction des valeurs
 ca_total = kpi_df['CA_Total'][0]
