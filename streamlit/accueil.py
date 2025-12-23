@@ -3,7 +3,8 @@ import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
 from queries import QUERY_KPI_GLOBAUX
-from styles import get_page_config, get_custom_css, render_navbar
+from styles import get_page_config, get_custom_css, render_navbar, apply_theme
+import visuel
 
 # Configuration de la page
 st.set_page_config(styles.get_page_config())
@@ -17,70 +18,13 @@ styles.render_navbar(st, current_page="resume")
 # Titre principal
 st.markdown("---")
 
-col1, col2 = st.columns([2, 1])
 
-with col1:
-    st.markdown("""
-    ### 📊 Le Défi Business
-    
-    Une chaîne de **retail** avec **45 magasins** répartis en 3 types (A, B, C) 
-    et **81 départements** cherche à optimiser ses assortiments et maximiser ses ventes.
-    
-    **Comment transformer les données en décisions stratégiques ?**
-    """)
-
-with col2:
-    st.info("""
-    **📍 Méthodologie**
-    - SQL pour requêtes
-    - Python pour analyse
-    - Plotly pour visualisation
-    - Approche : Question → Analyse → Réponse
-    """)
-
-
-st.markdown("---")  
-
-st.markdown("### ❓ Les 3 Questions Clés")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.markdown("""
-    #### 🏪 Question 1
-    **Nos magasins sont-ils bien segmentés ?**
-    
-    Validation de la typologie A/B/C et corrélation taille-performance.
-    
-    [→ Voir l'analyse](#)
-    """)
-
-with col2:
-    st.markdown("""
-    #### 🛍️ Question 2
-    **Quels départements privilégier ?**
-    
-    Identification des départements stratégiques par type de magasin.
-    
-    [→ Voir l'analyse](#)
-    """)
-
-with col3:
-    st.markdown("""
-    #### 📅 Question 3
-    **Comment exploiter la saisonnalité ?**
-    
-    Patterns temporels et opportunités saisonnières.
-    
-    [→ Voir l'analyse](#)
-    """)    
+st.markdown(textes.Accueil_Intro)
 
 st.markdown("---")
-st.markdown("### 📊 KPI Globaux")
+st.markdown("### KPI Globaux")
 
-# Requête
-conn = get_db_connection()
-kpi_df = pd.read_sql(QUERY_KPI_GLOBAUX, conn)
+kpi_df = pd.read_sql(QUERY_KPI_GLOBAUX, get_db_connection())
 conn.close()
 
 # Extraction des valeurs
@@ -104,3 +48,41 @@ with col3:
     
 with col4:
     st.metric("📅 Période", f"{date_debut[:4]} - {date_fin[:4]}")
+
+
+
+
+
+st.markdown("---")
+st.markdown("### Analyses Visuelles")
+
+
+
+
+chart_row1 = st.columns(2, gap="large")
+
+with chart_row1[0]:
+    # Corrélation Délai vs Satisfaction
+    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+
+with chart_row1[1]:
+    # Corrélation Délai vs Satisfaction
+    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+
+chart_row2 = st.columns(2, gap="large")
+
+with chart_row2[0]:
+    # Corrélation Délai vs Satisfaction
+    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+
+with chart_row2[1]:
+    # Corrélation Délai vs Satisfaction
+    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+
+
+
+
+st.markdown("---")
+st.markdown("### Recommandations")
+
+

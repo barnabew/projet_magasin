@@ -8,30 +8,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+import styles
 
 # ===========================
 # CONFIGURATION THEME
 # ===========================
 
 THEME_CONFIG = {
-    "paper_bgcolor": "#1e3c72",
-    "plot_bgcolor": "#1e3c72", 
-    "font": dict(color="#ffffff", family="Inter"),
-    "title": dict(font=dict(color="#ffffff", size=16, family="Inter")),
-    "xaxis": dict(
-        gridcolor="#2d3142",
-        color="#ffffff",
-        linecolor="#2d3142"
-    ),
-    "yaxis": dict(
-        gridcolor="#2d3142", 
-        color="#ffffff",
-        linecolor="#2d3142"
-    ),
-    "colorway": [
-        "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7",
-        "#DDA0DD", "#98D8C8", "#FDCB6E", "#6C5CE7", "#A29BFE"
-    ]
+    "paper_bgcolor": "#252936",
+    "plot_bgcolor": "#252936",
+    "font": dict(color="#ffffff"),
+    "title": dict(font=dict(color="#ffffff")),
+    "xaxis": dict(gridcolor="#2d3142"),
+    "yaxis": dict(gridcolor="#2d3142")
 }
 
 def apply_theme(fig):
