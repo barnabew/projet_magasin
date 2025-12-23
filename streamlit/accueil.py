@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
-from utils import get_db_connection
 from queries import QUERY_KPI_GLOBAUX
 from styles import apply_custom_css
 
