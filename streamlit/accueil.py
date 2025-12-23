@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
-from queries import QUERY_KPI_GLOBAUX
+from queries import QUERY_KPI_GLOBAUX,QUERY_TAILLE_PERF
 from styles import get_page_config, get_custom_css, render_navbar
 import visuel
 
@@ -26,27 +26,20 @@ st.markdown("### KPI Globaux")
 
 kpi_df = run_query(QUERY_KPI_GLOBAUX)
 
-# Extraction des valeurs
-ca_total = kpi_df['CA_Total'][0]
-nb_magasins = kpi_df['Nb_Magasins'][0]
-nb_depts = kpi_df['Nb_Departements'][0]
-date_debut = kpi_df['Date_Debut'][0]
-date_fin = kpi_df['Date_Fin'][0]
-
 # Affichage en colonnes
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.metric("💰 CA Total", f"${ca_total/1_000_000:.2f}M")
+    st.metric("💰 CA Total", f"${kpi_df['CA_Total'][0]/1_000_000:.2f}M")
     
 with col2:
-    st.metric("🏪 Magasins", nb_magasins)
+    st.metric("🏪 Magasins", kpi_df['Nb_Magasins'][0])
     
 with col3:
-    st.metric("📦 Départements", nb_depts)
+    st.metric("📦 Départements", kpi_df['Nb_Departements'][0])
     
 with col4:
-    st.metric("📅 Période", f"{date_debut[:4]} - {date_fin[:4]}")
+    st.metric("📅 Période", f"{kpi_df['Date_Debut'][0][:4]} - {kpi_df['Date_Fin'][0][:4]}")
 
 
 
@@ -62,21 +55,21 @@ chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
     # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
 
 with chart_row1[1]:
     # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
     # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
 
 with chart_row2[1]:
     # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(), use_container_width=True)
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
 
 
 
