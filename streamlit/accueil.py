@@ -55,17 +55,17 @@ chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
     # Corrélation Taille vs Performance
-    st.plotly_chart(visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERF)), use_container_width=True)
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERF)), width=True)
 
 with chart_row1[1]:
     # Heatmap du CA par Type de departement pour le Type de magasin A
-    st.plotly_chart(visuel.plot_heatmap_by_type(run_query(queries.QUERY_HEATMAP_DATA), store_type='A'), use_container_width=True)
+    st.plotly_chart(visuel.plot_heatmap_by_type(run_query(queries.QUERY_HEATMAP_DATA), store_type='A'), width=True)
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
     # Évolution Temporelle des Types de Magasins
-    st.plotly_chart(visuel.plot_evolution_temporelle_types(run_query(queries.QUERY_EVOL_TEMP_TYPE)), use_container_width=True)
+    st.plotly_chart(visuel.plot_evolution_temporelle_types(run_query(queries.QUERY_EVOL_TEMP_TYPE)), width=True)
 
 with chart_row2[1]:
     # Évolution des Top Départements
@@ -73,7 +73,7 @@ with chart_row2[1]:
     top_depts = top_depts_df['Dept'].tolist() 
     query_temporal = queries.get_query_top_depts_temporel(top_depts)  
     dept_temporal_df = run_query(query_temporal) 
-    st.plotly_chart(visuel.plot_evolution_top_departements(dept_temporal_df, top_depts), use_container_width=True) 
+    st.plotly_chart(visuel.plot_evolution_top_departements(dept_temporal_df, top_depts), width=True) 
 
 
 
