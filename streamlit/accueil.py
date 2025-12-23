@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
-from queries import QUERY_KPI_GLOBAUX,QUERY_TAILLE_PERF
+import queries
 from styles import get_page_config, get_custom_css, render_navbar
 import visuel
 
@@ -24,7 +24,7 @@ st.markdown("textes.Accueil_Intro")
 st.markdown("---")
 st.markdown("### KPI Globaux")
 
-kpi_df = run_query(QUERY_KPI_GLOBAUX)
+kpi_df = run_query(queries.QUERY_KPI_GLOBAUX)
 
 # Affichage en colonnes
 col1, col2, col3, col4 = st.columns(4)
@@ -54,23 +54,22 @@ st.markdown("### Analyses Visuelles")
 chart_row1 = st.columns(2, gap="large")
 
 with chart_row1[0]:
-    # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
+    # Corrélation Taille vs Performance
+    st.plotly_chart(visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERF)), use_container_width=True)
 
 with chart_row1[1]:
-    # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
+    # Heatmap du CA par Type de departement pour le Type de magasin A
+    st.plotly_chart(visuel.plot_heatmap_by_type(run_query(queries.QUERY_HEATMAP_DATA), store_type='A'), use_container_width=True)
 
 chart_row2 = st.columns(2, gap="large")
 
 with chart_row2[0]:
-    # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
+    # Évolution Temporelle des Types de Magasins
+    st.plotly_chart(visuel.plot_evolution_temporelle_types(run_query(queries.QUERY_EVOL_TEMP_TYPE)), use_container_width=True)
 
 with chart_row2[1]:
-    # Corrélation Délai vs Satisfaction
-    st.plotly_chart(visuel.plot_performance_by_type(run_query(QUERY_TAILLE_PERF)), use_container_width=True)
-
+    # Évolution des Top Départements
+    st.plotly_chart(visuel.plot_evolution_top_departements(queries.get_query_top_depts_temporel(run_query(queries.QUERY_GET_TOP10)),run_query(queries.QUERY_GET_TOP10)), use_container_width=True)
 
 
 
