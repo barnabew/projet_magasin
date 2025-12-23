@@ -7,7 +7,7 @@ from styles import get_page_config, get_custom_css, render_navbar
 import visuel
 
 # Configuration de la page
-st.set_page_config(get_page_config())
+st.set_page_config(**get_page_config())
 
 # Application du CSS personnalisé
 st.markdown(get_custom_css(), unsafe_allow_html=True)
