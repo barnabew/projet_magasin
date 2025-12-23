@@ -69,9 +69,9 @@ ORDER BY s.Type, CA_Total DESC;
 """
 
 # ===========================================
-# 5. SEGMENTATION DÉPARTEMENTS (COMPLET)
+# 5. CATÉGORIES DE DÉPARTEMENTS SELON PRÉSENCE ET PERFORMANCE
 # ===========================================
-QUERY_SEGMENTATION_COMPLETE = """
+QUERY_CATEGORIE_DEPTS = """
 WITH dept_presence AS (
     SELECT 
         Dept,
@@ -103,10 +103,14 @@ GROUP BY Categorie
 ORDER BY Moyenne_CA_Total DESC;
 """
 
+
+
+
+
 # ===========================================
-# 6. ÉVOLUTION TEMPORELLE PAR TYPE DE MAGASIN (COMPLET)
+# 6. ÉVOLUTION TEMPORELLE PAR TYPE DE MAGASIN
 # ===========================================
-QUERY_TYPE_PIVOT = """
+QUERY_EVOL_TEMP_TYPE ="""
 WITH type_monthly AS (
     SELECT 
         s.Type,
@@ -131,6 +135,8 @@ FROM type_monthly
 GROUP BY Mois
 ORDER BY Mois;
 """
+
+
 
 # ===========================================
 # 7. VARIATION DÉCEMBRE VS MOYENNE ANNUELLE (TYPE A) - SOMMES

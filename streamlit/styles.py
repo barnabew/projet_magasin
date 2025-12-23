@@ -485,4 +485,3 @@ def render_navbar(st, current_page="resume"):
     
     # Fermer le wrapper
     st.markdown('</div>', unsafe_allow_html=True)
-
