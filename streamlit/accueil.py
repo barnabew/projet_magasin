@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from utils import load_table, get_connection, run_query
 from queries import QUERY_KPI_GLOBAUX
-from styles import get_page_config, get_custom_css, render_navbar, apply_theme
+from styles import get_page_config, get_custom_css, render_navbar
 import visuel
 
 # Configuration de la page
