@@ -7,19 +7,19 @@ from styles import get_page_config, get_custom_css, render_navbar
 import visuel
 
 # Configuration de la page
-st.set_page_config(styles.get_page_config())
+st.set_page_config(get_page_config())
 
 # Application du CSS personnalisé
-st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
+st.markdown(get_custom_css(), unsafe_allow_html=True)
 
 # Navbar
-styles.render_navbar(st, current_page="resume")
+render_navbar(st, current_page="resume")
 
 # Titre principal
 st.markdown("---")
 
 
-st.markdown(textes.Accueil_Intro)
+st.markdown("textes.Accueil_Intro")
 
 st.markdown("---")
 st.markdown("### KPI Globaux")
