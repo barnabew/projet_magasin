@@ -22,4 +22,4 @@ styles.render_navbar(st, current_page="magasins")
 st.markdown("### 1. Performance par Type de Magasin")
 
 st.markdown("testé")
-visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERFORMANCE))
+st.plotly_chart(visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERFORMANCE)),use_container_width=True)

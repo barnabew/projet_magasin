@@ -1,3 +1,9 @@
+"""
+visuel.py
+Fonctions de visualisation extraites du notebook projet_magasin.ipynb
+Toutes les visualisations utilisent Plotly pour l'interactivité
+"""
+
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
@@ -59,12 +65,20 @@ def apply_theme(fig):
     return fig
 
 # ===========================
-# GRAPHIQUES SPÉCIALISÉS RETAIL
+# VISUALISATIONS DU NOTEBOOK
 # ===========================
 
+# 1. GRAPHIQUE CORRÉLATION TAILLE-PERFORMANCE
 def plot_performance_by_type(df):
-    """Graphique de performance par type de magasin"""
+    """
+    Graphique scatter de corrélation Taille vs Performance par type de magasin
+    Avec ligne de tendance et coefficient de corrélation
     
+    Args:
+        df: DataFrame avec colonnes ['Store', 'Size', 'Type', 'CA_Moyen']
+    Returns:
+        fig: Figure Plotly
+    """
     # Couleurs pour chaque type
     colors = {'A': '#FF6B6B', 'B': '#4ECDC4', 'C': '#45B7D1'}
     
@@ -121,18 +135,134 @@ def plot_performance_by_type(df):
     apply_theme(fig)
     return fig
 
-    """Graphique d'impact des promotions"""
-    fig = px.bar(
-        df,
-        x="Statut_Promo",
-        y="CA_Moyen",
-        title=title,
-        color="CA_Moyen",
-        color_continuous_scale="viridis"
+
+# 2. HEATMAP PERFORMANCE DÉPARTEMENTS PAR TYPE
+def plot_heatmap_by_type(df, store_type='A'):
+    """
+    Heatmap des performances départementales pour un type de magasin
+    
+    Args:
+        df: DataFrame avec colonnes ['Type', 'Store', 'Dept', 'CA_Total']
+        store_type: 'A', 'B', ou 'C'
+    Returns:
+        fig: Figure Plotly
+    """
+    # Filtrer les données pour le type spécifié
+    type_data = df[df['Type'] == store_type].copy()
+    
+    if len(type_data) == 0:
+        # Retourner une figure vide si pas de données
+        fig = go.Figure()
+        fig.add_annotation(
+            text=f"Aucune donnée pour le type {store_type}",
+            xref="paper", yref="paper",
+            x=0.5, y=0.5, showarrow=False,
+            font=dict(size=16, color="white")
+        )
+        apply_theme(fig)
+        return fig
+    
+    # Pivot pour la heatmap
+    pivot_data = type_data.pivot(index='Store', columns='Dept', values='CA_Total')
+    pivot_data = pivot_data.fillna(0)
+    
+    # Création de la heatmap
+    fig = go.Figure(data=go.Heatmap(
+        z=pivot_data.values,
+        x=pivot_data.columns,
+        y=pivot_data.index,
+        colorscale='YlOrRd',
+        colorbar=dict(title="CA Total ($)")
+    ))
+    
+    fig.update_layout(
+        title=f'Type {store_type} - Performance par Département',
+        xaxis_title='Département',
+        yaxis_title='Magasin'
     )
     
     apply_theme(fig)
     return fig
+
+
+# 3. GRAPHIQUE TEMPOREL PAR TYPE DE MAGASIN
+def plot_evolution_temporelle_types(df):
+    """
+    Graphique d'évolution du CA hebdomadaire par type de magasin
+    
+    Args:
+        df: DataFrame avec colonnes ['Nom_Mois', 'Type_A', 'Type_B', 'Type_C']
+    Returns:
+        fig: Figure Plotly
+    """
+    # Couleurs pour chaque type
+    colors = {'A': '#FF6B6B', 'B': '#4ECDC4', 'C': '#45B7D1'}
+    
+    fig = px.line(
+        df, 
+        x="Nom_Mois", 
+        y=["Type_A", "Type_B", "Type_C"], 
+        title="CA Hebdomadaire par Type de Magasin",
+        markers=True,
+        color_discrete_sequence=[colors['A'], colors['B'], colors['C']],
+        labels={
+            'Nom_Mois': 'Mois',
+            'value': 'CA Moyen Hebdomadaire ($)',
+            'variable': 'Type'
+        }
+    )
+    
+    # Augmenter l'épaisseur des lignes
+    fig.update_traces(line_width=3.5)
+    
+    # Renommer les légendes
+    fig.for_each_trace(lambda t: t.update(name=t.name.replace("Type_", "Type ")))
+    
+    apply_theme(fig)
+    return fig
+
+
+# 4. GRAPHIQUE TEMPOREL DES TOP DÉPARTEMENTS
+def plot_evolution_top_departements(df, top_depts):
+    """
+    Graphique d'évolution saisonnière des top départements
+    
+    Args:
+        df: DataFrame avec colonnes ['Mois', 'Nom_Mois', 'Dept_X', 'Dept_Y', ...]
+        top_depts: Liste des numéros de départements à afficher
+    Returns:
+        fig: Figure Plotly
+    """
+    # Colonnes des départements pour le graphique
+    dept_columns = [f'Dept_{dept}' for dept in top_depts]
+    
+    # Palette de couleurs distinctives
+    colors_depts = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+        '#DDA0DD', '#98D8C8', '#FDCB6E', '#6C5CE7', '#A29BFE'
+    ]
+    
+    # Création du graphique
+    fig = px.line(
+        df, 
+        x="Nom_Mois", 
+        y=dept_columns,
+        title="<b>Évolution Saisonnière des Top 10 Départements (Plus forte variation en Décembre - Type A)</b>",
+        markers=True,
+        color_discrete_sequence=colors_depts,
+        labels={
+            'Nom_Mois': 'Mois',
+            'value': 'CA Moyen Hebdomadaire ($)',
+            'variable': 'Département'
+        }
+    )
+    
+    # Renommer les légendes pour enlever "Dept_"
+    fig.for_each_trace(lambda t: t.update(name=t.name.replace("Dept_", "Dept ")))
+    
+    apply_theme(fig)
+    return fig
+
 
 # ===========================
 # UTILITAIRES

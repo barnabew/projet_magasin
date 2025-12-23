@@ -1,102 +1,112 @@
 """
 textes.py
-Textes et analyses pour le dashboard Retail Analytics
+Textes extraits du notebook projet_magasin.ipynb
+Organisés par rubrique avec intro/conclusion
 """
 
-# ===================
-# INTRODUCTIONS PAGES
-# ===================
-
-intro_departements = """
-**Analyse de l'assortiment départemental pour optimiser la performance par type de magasin.**
-
-Cette section analyse :
-- **La segmentation stratégique** : Classification des départements selon leur présence
-- **Les champions départementaux** : Départements à fort CA dans tous types de magasins  
-- **Les départements spécialisés** : Niches rentables à faible présence
-- **L'optimisation par type** : Stratégies différenciées selon la taille du magasin
-
-Objectif : Développer des stratégies d'assortiment ciblées pour maximiser la performance.
+# ===========================================
+# 1. KPI FONDAMENTAUX
+# ===========================================
+KPI_INTRO = """
+Nous commençons les analyses par le calcul des principaux KPI
 """
 
-intro_temporel = """
-**Analyse des patterns temporels pour exploiter la saisonnalité et optimiser les stratégies promotionnelles.**
-
-Cette page explore :
-- **Les tendances mensuelles globales** : Identification des pics et creux saisonniers
-- **Les variations par type de magasin** : Comportements différenciés selon la taille
-- **La saisonnalité départementale** : Opportunités de croissance temporelles
-- **L'efficacité promotionnelle** : Impact des markdown sur les ventes
-
-Insight clé : Exploiter les patterns temporels pour maximiser les revenus.
+# ===========================================
+# 2. IMPACT DES PROMOTIONS
+# ===========================================
+PROMOTIONS_INTRO = """
+Nous avons remarqué qu'il y avait une variable promotions dans les données, nous allons donc voir si celle-ci peut être utile.
 """
 
-# ===================
-# ANALYSES MAGASINS
-# ===================
-
-analyse_correlation = """
-### Corrélation Taille-Performance Confirmée
-
-**Insight stratégique** : La relation positive entre la taille des magasins et leur performance 
-valide la segmentation A/B/C et justifie des stratégies d'assortiment différenciées.
-
-**Implications business** :
-- **Type A** : Assortiment large, départements premium, stratégies de cross-selling
-- **Type B** : Équilibre entre assortiment et rentabilité, focus départements populaires  
-- **Type C** : Assortiment optimisé, concentration sur départements à forte rotation
-
-La corrélation positive indique que l'expansion des surfaces reste un levier de croissance viable.
+PROMOTIONS_CONCLUSION = """
+Nous remarquons que les promotions n'ont pas un impact significatif, nous ne poussons pas les analyses plus loin.
 """
 
-analyse_evolution_types = """
-### Patterns Temporels Différenciés par Type
-
-**Observations clés** :
-- **Type A** : Amplitude saisonnière élevée, sensibilité aux événements promotionnels
-- **Type B** : Stabilité relative, croissance régulière  
-- **Type C** : Volatilité modérée, adaptation rapide aux tendances locales
-
-**Recommandations temporelles** :
-- Planifier les promotions majeures sur les Type A (impact amplifié)
-- Maintenir la régularité d'approvisionnement sur les Type B
-- Adapter rapidement l'assortiment des Type C aux pics saisonniers
+# ===========================================
+# 3. ANALYSE DES MAGASINS ET VALIDATION TYPOLOGIE
+# ===========================================
+TYPOLOGIE_INTRO = """
+De même, nous avons la varibales type, nous allons compararé la taille ainsi que les CA hebdo. des différents type.
 """
 
-# ===================
-# ANALYSES DÉPARTEMENTS  
-# ===================
-
-analyse_segmentation_depts = """
-### Classification Stratégique des Départements
-
-**Méthodologie** : Segmentation selon le taux de présence dans les magasins
-
-- **Universels (>90%)** : Départements indispensables, présents partout
-- **Courants (70-90%)** : Départements populaires, forte demande 
-- **Sélectifs (40-70%)** : Départements ciblés, opportunités de différenciation
-- **Spécialisés (<40%)** : Départements niches, potentiel de marge élevée
-
-Cette classification guide les décisions d'assortiment par type de magasin.
+TYPOLOGIE_CONCLUSION = """
+Nous avons donc bien un lien entre la taille et le CA , ce que était attendu, de plus on se retourve avec un classication A = Grand magasin, B = Moyen magasin , C = Petit magasin.
 """
 
-analyse_champions = """
-### Départements Champions : Moteurs de Performance
-
-**Critères** : Départements avec forte présence ET forte performance CA
-
-Ces départements représentent :
-- **Le cœur d'assortiment** à maintenir dans tous les magasins
-- **Les leviers de croissance** prioritaires pour les investissements
-- **Les standards de performance** à reproduire sur d'autres départements
-
-Focus sur l'optimisation continue de ces champions pour maximiser l'impact.
+# ===========================================
+# 4. ANALYSE DE LA PÉRIODE TEMPORELLE
+# ===========================================
+PERIODE_TEMPORELLE_INTRO = """
+Nous allons maintenant vérifier les données temporelles. Pour cela nous commençons par regardé les nombres d'obeservations par mois pour pouvoir ensuite faire une pondérations par leurs nombres si necessaire.
 """
 
-analyse_specialises = """
-### Départements Spécialisés : Opportunités de Différenciation
+PERIODE_TEMPORELLE_CONCLUSION = """
+Nous remarquons une différence de près de 100% entre les différents mois, nous allons devoir pondérer les analyses par le nombre d'observations par mois si nous voulons faire des analyses temporelles. Ce que nous ferons plus tard.
+"""
 
-**Stratégie** : Identifier les niches rentables à faible présence mais forte performance
+# ===========================================
+# 5. ANALYSE DÉPARTEMENTALE PAR TYPE
+# ===========================================
+DEPT_PAR_TYPE_INTRO = """
+Nous souhaitons comprendre comment se structurent les magasins des différents types, pour cela nous allons analyser les meilleurs départements des différents types de magasins.
+"""
+
+DEPT_PAR_TYPE_CONCLUSION = """
+On se retrouve avec beaucoup de similitudes entre les magasins de Type A et type C, avec les départements 92, 90, 95, 38 dans le top 5 des deux types. Les magasins de type B ont quant à eux un top totalement différent avec seulement le département 95 en commun avec les autres types.
+"""
+
+# ===========================================
+# 6. SEGMENTATION DES DÉPARTEMENTS
+# ===========================================
+SEGMENTATION_INTRO = """
+Nous continuons de travailler sur les départements car il y a visiblement un lien entre les performances et les départements, pour cela regardons leur présence dans les magasins. Universels (>90%), Courants(>70%), Sélectifs(>40%), Spécialisés(<40%)
+"""
+
+SEGMENTATION_CONCLUSION = """
+Nous remarquons que les départements universel et spécialisés sont ceux avec le meilleur CA par magasin. Évidemment l'anonymisation des départements ne nous permet pas de pouvoir faire plus d'analyses dessus.
+"""
+
+# ===========================================
+# 7. ANALYSE TEMPORELLE DES PERFORMANCES MENSUELLES GLOBALES
+# ===========================================
+TEMPOREL_GLOBAL_INTRO = """
+Comme dit plus haut nous allons maintenant passer à l'analyse temporelle. Pour cela on a vu qu'il y avait une pondération à faire. Nous commençons par une analyse temporelle simple, un calcul du CA moyen hebdomadaire. Évidemment nous avons vu qu'il y avait une différence entre les types de magasins nous allons donc faire cette analyse pour chaque type de magasins.
+"""
+
+TEMPOREL_GLOBAL_CONCLUSION = """
+Nous remarquons un augementation en fin d'année pour les magasin de type A et B. Alors que les magasins de type C ont plus un comportement constant au cours de l'année. Nous remarquons donc un etrangeté car on se retrouvé avec les magasins de type A et C ayant les meme meilleur département. Mais on remarque maintenant que d'un point de vu temporelle les magasins de Type A et C ne se comporte par du tout pareil. Nous allons en chercher la cause.
+"""
+
+# ===========================================
+# 8. VARIATION DÉCEMBRE (ANALYSE TEMPORELLE DÉTAILLÉE)
+# ===========================================
+VARIATION_DECEMBRE_CONCLUSION = """
+Nous pouvons donc voir que la différences de Ca en décembre est du a un petit nombres de département. De plus nous avons maintenant notre listes appartement au top 10.
+"""
+
+# ===========================================
+# VISUALISATIONS
+# ===========================================
+
+# 9. CORRÉLATION TAILLE-PERFORMANCE
+CORRELATION_TAILLE_INTRO = """
+Confirmation visuelle de la relation entre taille des magasins et performance.
+"""
+
+CORRELATION_TAILLE_CONCLUSION = """
+**Corrélation Confirmée**
+
+Relation taille-performance validée visuellement.
+"""
+
+# 10. HEATMAPS PERFORMANCE DÉPARTEMENTS PAR TYPE
+HEATMAP_INTRO = """
+Visualisation des performances départementales pour chaque type de magasin.
+"""
+
+HEATMAP_CONCLUSION = """
+→ Heatmaps générées pour analyse visuelle par type
+→ Patterns de performance différents selon le type de magasin
 
 Avantages des départements spécialisés :
 - **Marges supérieures** dues à la spécialisation
@@ -105,6 +115,20 @@ Avantages des départements spécialisés :
 
 Opportunité d'expansion sélective selon le profil des magasins.
 """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 analyse_perf_par_type = """
 ### Performance Départementale Différenciée
