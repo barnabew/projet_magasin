@@ -28,7 +28,7 @@ st.markdown("---")
 st.markdown("### Impact des promotions sur la performance des magasins")
 
 
-promo = run_query(queries.QUERY_PROMO_IMPACT)
+promo = run_query(queries.QUERY_IMPACT_PROMOTIONS)
 avec_promo = round(promo["CA_Moyen"][0])
 sans_promo  = round(promo["CA_Moyen"][1])
 pourcentage_diff = round(((promo["CA_Moyen"][0] - promo["CA_Moyen"][1]) / promo["CA_Moyen"][1]) * 100, 2)
