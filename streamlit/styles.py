@@ -181,6 +181,59 @@ def get_custom_css():
         letter-spacing: -0.5px !important;
     }
 
+    /* Card tableau (même style que KPI) */
+    .table-card {
+        background: #252936;
+        padding: 24px;
+        border-radius: 8px;
+        border: 1px solid #2d3142;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .table-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-color: #3d4152;
+    }
+
+    /* Tableau */
+    .table-card table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    /* Header */
+    .table-card thead th {
+        color: #8b92a7;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        padding: 12px 8px;
+        border-bottom: 1px solid #2d3142;
+    }
+
+    /* Cellules */
+    .table-card tbody td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #2d3142;
+        font-weight: 500;
+    }
+
+    /* Hover ligne */
+    .table-card tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Supprime la dernière bordure */
+    .table-card tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+
     /* Conteneurs pour les graphiques */
     .chart-container {
         background: #252936 !important;
@@ -426,6 +479,16 @@ def render_chart_container(title, subtitle):
         <div class="chart-subtitle">{subtitle}</div>
     </div>
     """
+
+
+def render_table_card(df):
+    """Génère une carte tableau à partir d'un DataFrame"""
+    return f"""
+    <div class="table-card">
+        {df.to_html(index=False)}
+    </div>
+    """
+
 
 
 def render_section_header(title):
