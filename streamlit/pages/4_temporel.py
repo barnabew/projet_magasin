@@ -31,6 +31,17 @@ st.markdown(textes.temporel_type , unsafe_allow_html=True)
 
 st.markdown("---")
 
+st.markdown("## Analyse Temporelle décembre - autres mois pour les magasins de type A")
+
+
+sommes = run_query(queries.QUERY_VARIATION_DECEMBRE_SOMMES)
+sommes_group = sommes.groupby(by=["Groupe"]).sum().sort_values(by=["Nb_Departements"], ascending=True)
+
+st.markdown(styles.render_table_window("Départements", sommes_group),unsafe_allow_html=True)
+
+
+st.markdown("---")
+
 st.markdown("## Analyse Temporelle departements de type A")
 
 st.plotly_chart(visuel.plot_ca_time_series_dept_type_a(run_query(queries.QUERY_CA_TIME_SERIES_DEPT_TYPE_A)), use_container_width=True)

@@ -190,7 +190,7 @@ WHERE Difference_Decembre_Annee < 0
 UNION ALL
 
 SELECT 
-    'Le reste' as Groupe,
+    'Positif pas top 20 (reste)' as Groupe,
     ROUND(SUM(Difference_Decembre_Annee), 2) as Somme_Differences,
     COUNT(*) as Nb_Departements
 FROM ranked_stats
