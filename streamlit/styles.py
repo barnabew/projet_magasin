@@ -181,55 +181,68 @@ def get_custom_css():
         letter-spacing: -0.5px !important;
     }
 
-    /* Card tableau (même style que KPI) */
-    .table-card {
+    /* Fenêtre tableau */
+    .table-window {
         background: #252936;
-        padding: 24px;
         border-radius: 8px;
         border: 1px solid #2d3142;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         transition: all 0.2s ease;
+        overflow: hidden;
     }
 
-    .table-card:hover {
+    .table-window:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         border-color: #3d4152;
     }
 
+    /* Header façon fenêtre */
+    .table-window-header {
+        padding: 14px 20px;
+        border-bottom: 1px solid #2d3142;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Corps tableau */
+    .table-window-body {
+        padding: 16px 20px;
+        max-height: 360px;
+        overflow-y: auto;
+    }
+
     /* Tableau */
-    .table-card table {
+    .table-window table {
         width: 100%;
         border-collapse: collapse;
         font-size: 14px;
         color: #ffffff;
     }
 
-    /* Header */
-    .table-card thead th {
+    .table-window thead th {
         color: #8b92a7;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 600;
-        padding: 12px 8px;
+        padding: 10px 6px;
         border-bottom: 1px solid #2d3142;
     }
 
-    /* Cellules */
-    .table-card tbody td {
-        padding: 12px 8px;
+    .table-window tbody td {
+        padding: 10px 6px;
         border-bottom: 1px solid #2d3142;
         font-weight: 500;
     }
 
-    /* Hover ligne */
-    .table-card tbody tr:hover {
+    .table-window tbody tr:hover {
         background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* Supprime la dernière bordure */
-    .table-card tbody tr:last-child td {
+    .table-window tbody tr:last-child td {
         border-bottom: none;
     }
 
@@ -481,11 +494,14 @@ def render_chart_container(title, subtitle):
     """
 
 
-def render_table_card(df):
-    """Génère une carte tableau à partir d'un DataFrame"""
+def render_table_window(title, df):
+    """Génère une fenêtre tableau avec effet carte"""
     return f"""
-    <div class="table-card">
-        {df.to_html(index=False)}
+    <div class="table-window">
+        <div class="table-window-header">{title}</div>
+        <div class="table-window-body">
+            {df.to_html(index=False)}
+        </div>
     </div>
     """
 
