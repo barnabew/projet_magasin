@@ -48,13 +48,13 @@ Cela suggère que la taille du magasin influence les départements qui réussiss
 Nous allons donc maintenant regarder le top 5 des départements par type de magasin pour confirmer cette hypothèse.
 """
 
-textes.temporel_intro = """
+temporel_intro = """
 Nous allons maitenaznt analyser les données sous l'angle temporels.
 L'objectif est de comprendre comment les performances des magasins et des départements évoluent au fil du temps.
 """
 
 
-textes.temporel_type = """
+temporel_type = """
 Nous remarquons que les tendances temporelles varient differerament selon le type de magasin.
 En effet alors que nous avions remarquer que les types A et C disposer de département similaires, nous remarquons que leurs tendances temporelles sont différentes.
 Alors que les magasins de type A et B connaisent un CA plus fort en fin d'années , les magasins du type C ont un CA constant tout au long de l'année.
@@ -62,7 +62,7 @@ Nous allons maintenant nous concentrer sur les départements des magasins de typ
 Nous voulons savoir si cela est du a un effet saisonnier ou si certains départements performent mieux à certaines périodes de l'année.
 """
 
-textes.temporel_decembre_a = """
+temporel_decembre_a = """
 Nous voulons donc savoir si cela estr du a une augmentation d'un petit nombres de départments ou si tous les départements connaissent cette tendance.
 Or on remarquer que le top Top 10 des départments connait une grosse augmentatyions comparer au autres.
 Nous pouvons donc dit que cela est du à ses départments.
@@ -70,7 +70,7 @@ Nous pouvons donc dit que cela est du à ses départments.
 
 
 
-textes.temporel_dept_a = """
+temporel_dept_a = """
 Nous avons ici la réprensentations de la performance temporelle de ce top 10 des départements dans les magasins de type A.
 Nous pouvons donc bien voir cette montée en décembre.
 Cela suggère que certains départements, probablement liés aux fêtes de fin d'année (comme les jouets, les décorations, etc.), connaissent une augmentation significative des ventes en novembre(black friday)/ décembre(noël).
