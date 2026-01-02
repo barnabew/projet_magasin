@@ -19,7 +19,7 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="magasins")
 
-
+st.markdown("---")
 
 st.markdown(textes.magasins_intro , unsafe_allow_html=True)
 
