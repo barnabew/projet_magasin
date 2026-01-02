@@ -24,7 +24,7 @@ st.markdown("---")
 
 st.markdown("## Analyse Temporelle par type")
 
-st.plotly_chart(visuel.plot_ca_time_series_by_type(run_query(queries.QUERY_CA_TIME_SERIES_BY_TYPE)), use_container_width=True)
+st.plotly_chart(visuel.plot_evolution_temporelle_types(run_query(queries.QUERY_EVOL_TEMP_TYPE)), use_container_width=True)
 
 st.markdown(textes.temporel_type , unsafe_allow_html=True)
 
