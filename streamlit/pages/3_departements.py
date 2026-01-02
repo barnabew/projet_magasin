@@ -16,11 +16,11 @@ st.markdown(styles.get_custom_css(), unsafe_allow_html=True)
 # Navbar
 styles.render_navbar(st, current_page="departements")
 
-# Titre business-oriented
-st.markdown("# 🛍️ Optimisation Départementale & Assortiment")
+st.markdown("---")
 
-# KPIs Business des départements
-st.markdown("## 📈 Performance Départementale")
+st.markdown(textes.departements_intro , unsafe_allow_html=True)
+
+st.markdown("---")
 
 # Top 5 des départements par type de magasin
 st.markdown("### 🏆 Top 5 des Départements par Type de Magasin")
@@ -33,39 +33,79 @@ try:
     df_top5 = df_dept_stars[df_dept_stars['Rang'] <= 5].copy()
     
     if not df_top5.empty:
-        # Création du tableau croisé
-        tableau_data = []
-        
+        # Affichage en cartes KPI par rang
         for rang in range(1, 6):  # Rangs 1 à 5
-            row = {"🏆 Rang": rang}
+            st.markdown(f"### 🏆 **Rang {rang}**")
             
-            # Pour chaque type de magasin
-            for type_magasin in ['A', 'B', 'C']:
-                dept_info = df_top5[(df_top5['Type'] == type_magasin) & (df_top5['Rang'] == rang)]
-                
-                if not dept_info.empty:
-                    dept_num = int(dept_info.iloc[0]['Dept'])
-                    ca_moyen = int(dept_info.iloc[0]['CA_Moyen'])
-                    row[f"🏪 Type {type_magasin}"] = f"Dept {dept_num} (${ca_moyen:,})"
+            # Création de 3 colonnes pour chaque type
+            col_a, col_b, col_c = st.columns(3)
+            
+            # Type A
+            with col_a:
+                dept_info_a = df_top5[(df_top5['Type'] == 'A') & (df_top5['Rang'] == rang)]
+                if not dept_info_a.empty:
+                    dept_num = int(dept_info_a.iloc[0]['Dept'])
+                    ca_moyen = int(dept_info_a.iloc[0]['CA_Moyen'])
+                    nb_magasins = int(dept_info_a.iloc[0]['Nb_Magasins'])
+                    
+                    st.markdown(
+                        styles.render_kpi_card(
+                            "🏪 Type A (Grands)", 
+                            f"Dept {dept_num}<br>${ca_moyen:,} moy.<br>({nb_magasins} magasins)"
+                        ), 
+                        unsafe_allow_html=True
+                    )
                 else:
-                    row[f"🏪 Type {type_magasin}"] = "-"
+                    st.markdown(
+                        styles.render_kpi_card("🏪 Type A", "Aucune donnée"), 
+                        unsafe_allow_html=True
+                    )
             
-            tableau_data.append(row)
-        
-        # Affichage du tableau
-        df_tableau = pd.DataFrame(tableau_data)
-        
-        st.dataframe(
-            df_tableau,
-            column_config={
-                "🏆 Rang": st.column_config.NumberColumn("🏆 Rang", width="small"),
-                "🏪 Type A": st.column_config.TextColumn("🏪 Type A (Grands)", width="medium"),
-                "🏪 Type B": st.column_config.TextColumn("🏬 Type B (Moyens)", width="medium"),
-                "🏪 Type C": st.column_config.TextColumn("🏫 Type C (Petits)", width="medium")
-            },
-            use_container_width=True,
-            hide_index=True
-        )
+            # Type B  
+            with col_b:
+                dept_info_b = df_top5[(df_top5['Type'] == 'B') & (df_top5['Rang'] == rang)]
+                if not dept_info_b.empty:
+                    dept_num = int(dept_info_b.iloc[0]['Dept'])
+                    ca_moyen = int(dept_info_b.iloc[0]['CA_Moyen'])
+                    nb_magasins = int(dept_info_b.iloc[0]['Nb_Magasins'])
+                    
+                    st.markdown(
+                        styles.render_kpi_card(
+                            "🏬 Type B (Moyens)", 
+                            f"Dept {dept_num}<br>${ca_moyen:,} moy.<br>({nb_magasins} magasins)"
+                        ), 
+                        unsafe_allow_html=True
+                    )
+                else:
+                    st.markdown(
+                        styles.render_kpi_card("🏬 Type B", "Aucune donnée"), 
+                        unsafe_allow_html=True
+                    )
+            
+            # Type C
+            with col_c:
+                dept_info_c = df_top5[(df_top5['Type'] == 'C') & (df_top5['Rang'] == rang)]
+                if not dept_info_c.empty:
+                    dept_num = int(dept_info_c.iloc[0]['Dept'])
+                    ca_moyen = int(dept_info_c.iloc[0]['CA_Moyen'])
+                    nb_magasins = int(dept_info_c.iloc[0]['Nb_Magasins'])
+                    
+                    st.markdown(
+                        styles.render_kpi_card(
+                            "🏫 Type C (Petits)", 
+                            f"Dept {dept_num}<br>${ca_moyen:,} moy.<br>({nb_magasins} magasins)"
+                        ), 
+                        unsafe_allow_html=True
+                    )
+                else:
+                    st.markdown(
+                        styles.render_kpi_card("🏫 Type C", "Aucune donnée"), 
+                        unsafe_allow_html=True
+                    )
+            
+            # Espacement entre les rangs
+            if rang < 5:
+                st.markdown("<br>", unsafe_allow_html=True)
         
         # Analyse comparative
         st.markdown("### 📊 Analyse Comparative")

@@ -8,7 +8,6 @@ import textes
 import visuel
 import queries
 
-st.session_state["page"] = "magasins"
 
 # Configuration de la page
 st.set_page_config(**styles.get_page_config())
