@@ -18,7 +18,7 @@ styles.render_navbar(st, current_page="departements")
 
 st.markdown("---")
 
-st.markdown(textes.departements_intro , unsafe_allow_html=True)
+st.markdown("textes.departements_intro" , unsafe_allow_html=True)
 
 st.markdown("---")
 
