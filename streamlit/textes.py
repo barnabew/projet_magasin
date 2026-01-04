@@ -77,3 +77,12 @@ Cela suggère que certains départements, probablement liés aux fêtes de fin d
 Cette tendance saisonnière est importante à prendre en compte pour la gestion des stocks et les stratégies de marketing.
 Cependant nous ne pouvons pas en dire plus car nous n'avons pas les noms des départements.
 """
+
+
+recommandations = """
+
+Etudes des stocks pour voir l'utilités des promotions.
+Préviligier les département universels qui génerent la grandes majorités du CA
+Travailler sur la saisonnalité des départements pour optimiser les stocks et les promotions
+
+"""

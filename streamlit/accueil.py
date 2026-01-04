@@ -5,6 +5,7 @@ from utils import load_table, get_connection, run_query
 import queries
 from styles import get_page_config, get_custom_css, render_navbar, render_kpi_card
 import visuel
+import textes
 
 # Configuration de la page
 st.set_page_config(**get_page_config())
@@ -16,13 +17,6 @@ st.markdown(get_custom_css(), unsafe_allow_html=True)
 render_navbar(st, current_page="resume")
 
 # Titre principal
-st.markdown("---")
-
-
-st.markdown("textes.Accueil_Intro")
-
-st.markdown("---")
-st.markdown("### KPI Globaux")
 
 kpi_df = run_query(queries.QUERY_KPI_GLOBAUX)
 
@@ -43,10 +37,6 @@ with col4:
 
 
 
-
-
-st.markdown("---")
-st.markdown("### Analyses Visuelles")
 
 
 
@@ -76,9 +66,4 @@ with chart_row2[1]:
     st.plotly_chart(visuel.plot_evolution_top_departements(dept_temporal_df, top_depts), use_container_width=True) 
 
 
-
-st.markdown("---")
-st.markdown("### Recommandations")
-
-st.markdown("textes.Accueil_Recommandations")
 
