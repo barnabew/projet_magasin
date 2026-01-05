@@ -37,7 +37,7 @@ st.markdown("## Analyse Temporelle décembre - autres mois pour les magasins de 
 sommes = run_query(queries.QUERY_VARIATION_DECEMBRE_SOMMES)
 sommes_group = sommes.groupby(by=["Groupe"]).sum().sort_values(by=["Nb_Departements"], ascending=True)
 
-st.markdown(styles.render_table_window("Départements", sommes_group),unsafe_allow_html=True)
+st.markdown(styles.render_table_window("Départements", sommes),unsafe_allow_html=True)
 
 
 st.markdown("---")
