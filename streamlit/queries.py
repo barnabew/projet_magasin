@@ -61,7 +61,7 @@ SELECT
     ROUND(SUM(sa.Weekly_Sales), 2) AS CA_Total,
     ROUND(AVG(sa.Weekly_Sales), 2) AS CA_Moyen,
     COUNT(DISTINCT sa.Store) AS Nb_Magasins,
-    RANK() OVER (PARTITION BY s.Type ORDER BY SUM(sa.Weekly_Sales) DESC) as Rang
+    RANK() OVER (PARTITION BY s.Type ORDER BY AVG(sa.Weekly_Sales) DESC) as Rang
 FROM sales sa
 JOIN stores s ON sa.Store = s.Store
 GROUP BY s.Type, sa.Dept
