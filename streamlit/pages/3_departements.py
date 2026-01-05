@@ -53,7 +53,7 @@ st.markdown("### Top 5 des Départements par Type de Magasin")
 
 df_dept_stars = run_query(queries.QUERY_DEPT_STARS)
     
-st.markdown(styles.render_table_window("Détail des ventes", df_dept_stars),unsafe_allow_html=True)
+st.markdown(styles.render_table_window("Détail des ventes", df_dept_stars[df_dept_stars["Rang"]<=5]),unsafe_allow_html=True)
 
 
 st.markdown(textes.departements_top5, unsafe_allow_html=True)
