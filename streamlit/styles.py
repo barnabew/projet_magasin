@@ -220,6 +220,7 @@ def get_custom_css():
         border-collapse: collapse;
         font-size: 14px;
         color: #ffffff;
+        table-layout: fixed;
     }
 
     .table-window thead th {
@@ -228,14 +229,30 @@ def get_custom_css():
         text-transform: uppercase;
         letter-spacing: 1px;
         font-weight: 600;
-        padding: 10px 6px;
+        padding: 12px 8px;
         border-bottom: 1px solid #2d3142;
+        text-align: left;
+        vertical-align: top;
+        position: relative;
     }
 
     .table-window tbody td {
-        padding: 10px 6px;
+        padding: 12px 8px;
         border-bottom: 1px solid #2d3142;
         font-weight: 500;
+        text-align: left;
+        vertical-align: middle;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Assurer l'alignement correct pour les colonnes numériques */
+    .table-window tbody td:nth-child(2),
+    .table-window tbody td:nth-child(3),
+    .table-window thead th:nth-child(2),
+    .table-window thead th:nth-child(3) {
+        text-align: right;
     }
 
     .table-window tbody tr:hover {
@@ -496,11 +513,19 @@ def render_chart_container(title, subtitle):
 
 def render_table_window(title, df):
     """Génère une fenêtre tableau avec effet carte"""
+    # Amélioration du rendu HTML avec des options plus précises
+    html_table = df.to_html(
+        index=False, 
+        table_id="data-table",
+        classes="table-striped table-hover",
+        escape=False,
+        border=0
+    )
     return f"""
     <div class="table-window">
         <div class="table-window-header">{title}</div>
         <div class="table-window-body">
-            {df.to_html(index=False)}
+            {html_table}
         </div>
     </div>
     """
