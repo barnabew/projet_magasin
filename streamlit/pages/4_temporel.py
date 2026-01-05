@@ -44,7 +44,11 @@ st.markdown("---")
 
 st.markdown("## Analyse Temporelle departements de type A")
 
-st.plotly_chart(visuel.plot_ca_time_series_dept_type_a(run_query(queries.QUERY_CA_TIME_SERIES_DEPT_TYPE_A)), use_container_width=True)
+top_depts_df = run_query(queries.QUERY_GET_TOP10) 
+top_depts = top_depts_df['Dept'].tolist() 
+query_temporal = queries.get_query_top_depts_temporel(top_depts)  
+dept_temporal_df = run_query(query_temporal) 
+st.plotly_chart(visuel.plot_evolution_top_departements(dept_temporal_df, top_depts), use_container_width=True)
 
 st.markdown(textes.temporel_dept_a , unsafe_allow_html=True)
 
