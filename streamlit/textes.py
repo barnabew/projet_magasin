@@ -48,9 +48,13 @@ Certains départements apparaissent systématiquement parmi les plus performants
 
 departements_heatmaps = """
 **Insight clé :**  
-Les départements les plus performants varient fortement selon le type de magasin.
+Les magasins de type A et C présentent des schémas de performance départementale similaires, tandis que le type B diffère notablement.
+"""
 
-La taille du magasin influence directement les départements qui génèrent le plus de chiffre d’affaires.
+departements_segmentation = """
+**Insight clé :**
+Les départements universels, ainsi que les département spécialisés sont les départements les plus performants en moyenne.
+Cela suggère que cibler ces départements pourrait être une stratégie efficace pour maximiser le chiffre d’affaires.
 """
 
 
@@ -87,14 +91,8 @@ Les départements qui varient le plus en décembres varient également en novemb
 
 
 recommandations = """
-
-
-
-Etudes des stocks pour voir l'utilités des promotions car elles n'ont pas d'impact sur le CA moyen.
-
-Préviligier les département universels qui génerent la grandes majorités du CA
-Les magasins du type A et C devraient se concentrer sur les départements performants communs, tandis que les magasins de type B pourraient adapter leur offre en fonction des départements spécifiques qui performent bien pour eux.
-Travailler sur les performances des magasins A et B en fin d'années.
-Travailler sur les départements performants en fin d'années pour maximiser les ventes durant cette période cruciale.
-
+- **Promotions** : Ne pas se focaliser sur les promotions comme levier principal de croissance du chiffre d’affaires, étant donné leur impact limité.
+- **Segmentation des Magasins** : Utiliser la taille des magasins pour segmenter et adapter les stratégies commerciales.
+- **Départements performants** : Cibler les départements universels et spécialisés pour maximiser le chiffre d’affaires.
+- **Stratégies Temporelles** : Adapter les stratégies de vente en fonction des tendances temporelles spécifiques à chaque type de magasin.
 """

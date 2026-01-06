@@ -52,4 +52,5 @@ with chart_row1[1]:
 
 
 
-
+st.title("Recommandations")
+st.markdown(textes.recommandations, unsafe_allow_html=True)

@@ -57,3 +57,13 @@ st.markdown(styles.render_table_window("Détail des ventes", df_dept_stars[df_de
 
 
 st.markdown(textes.departements_top5, unsafe_allow_html=True)
+
+st.markdown("---")
+
+st.markdown("### Segmentation des départements selon leurs présences")
+
+def_dept_segmentation = run_query(queries.QUERY_CATEGORIE_DEPTS)
+
+st.markdown(styles.render_table_window("Segmentation des départements", def_dept_segmentation),unsafe_allow_html=True)
+
+st.markdown(textes.departements_segmentation, unsafe_allow_html=True)

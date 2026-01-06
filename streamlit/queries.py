@@ -76,17 +76,13 @@ WITH dept_presence AS (
     SELECT 
         Dept,
         COUNT(DISTINCT Store) as Nb_Magasins,
-        ROUND(COUNT(DISTINCT Store) * 100.0 / 
-              (SELECT COUNT(DISTINCT Store) FROM sales), 1) AS Taux_Presence,
-        ROUND(SUM(Weekly_Sales), 2) AS CA_Total,
+        ROUND(COUNT(DISTINCT Store) * 100.0 / (SELECT COUNT(DISTINCT Store) FROM sales), 1) AS Taux_Presence,
+        -- CA moyen par magasin où le dept est présent (permet comparaison équitable)
         ROUND(SUM(Weekly_Sales) / COUNT(DISTINCT Store), 2) AS CA_Moyen_Par_Magasin,
         CASE 
-            WHEN COUNT(DISTINCT Store) * 100.0 / 
-                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 90 THEN 'Universel'
-            WHEN COUNT(DISTINCT Store) * 100.0 / 
-                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 70 THEN 'Courant' 
-            WHEN COUNT(DISTINCT Store) * 100.0 / 
-                 (SELECT COUNT(DISTINCT Store) FROM sales) >= 40 THEN 'Sélectif'
+            WHEN COUNT(DISTINCT Store) * 100.0 / (SELECT COUNT(DISTINCT Store) FROM sales) >= 90 THEN 'Universel'
+            WHEN COUNT(DISTINCT Store) * 100.0 / (SELECT COUNT(DISTINCT Store) FROM sales) >= 70 THEN 'Courant' 
+            WHEN COUNT(DISTINCT Store) * 100.0 / (SELECT COUNT(DISTINCT Store) FROM sales) >= 40 THEN 'Sélectif'
             ELSE 'Spécialisé'
         END AS Categorie
     FROM sales
@@ -96,11 +92,11 @@ SELECT
     Categorie,
     COUNT(*) as Nb_Depts,
     ROUND(AVG(Taux_Presence), 1) as Taux_Moyen,
-    ROUND(AVG(CA_Total), 0) as Moyenne_CA_Total,
-    ROUND(AVG(CA_Moyen_Par_Magasin), 0) as Moyenne_CA_Par_Magasin
+    -- Moyenne du CA par magasin pour les depts de cette catégorie (comparable)
+    ROUND(AVG(CA_Moyen_Par_Magasin), 0) as CA_Moyen_Par_Magasin
 FROM dept_presence
 GROUP BY Categorie
-ORDER BY Moyenne_CA_Total DESC;
+ORDER BY CA_Moyen_Par_Magasin DESC;
 """
 
 
