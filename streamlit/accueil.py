@@ -23,7 +23,7 @@ pourcentage_diff = round(((promo["CA_Moyen"][0] - promo["CA_Moyen"][1]) / promo[
 
 df = run_query(queries.QUERY_TYPES_VALIDATION)
 
-corr = df['Size'].corr(df['CA_Moyen'])
+corr = df['Taille_Moyenne'].corr(df['CA_Moyen'])
 
 # Affichage en colonnes
 col1, col2, col3, col4 = st.columns(4)
