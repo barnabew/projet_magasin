@@ -6,6 +6,7 @@ import queries
 from styles import get_page_config, get_custom_css, render_navbar, render_kpi_card
 import visuel
 import textes
+import styles
 
 # Configuration de la page
 st.set_page_config(**get_page_config())

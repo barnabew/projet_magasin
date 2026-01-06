@@ -106,21 +106,6 @@ def plot_performance_by_type(df):
         )
     )
     
-    # Calcul de la corrélation
-    correlation = df['Size'].corr(df['CA_Moyen'])
-    
-    # Ajout de l'annotation de corrélation
-    fig.add_annotation(
-        text=f'Corrélation: {correlation:.3f}',
-        xref='paper', yref='paper',
-        x=0.05, y=0.95,
-        showarrow=False,
-        bgcolor='rgba(255, 255, 255, 0.2)',
-        bordercolor='rgba(255, 255, 255, 0.3)',
-        borderwidth=1,
-        font=dict(color='white', size=12)
-    )
-    
     apply_theme(fig)
     return fig
 
