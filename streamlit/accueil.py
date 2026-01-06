@@ -18,16 +18,21 @@ render_navbar(st, current_page="resume")
 
 # Titre principal
 
-kpi_df = run_query(queries.QUERY_KPI_GLOBAUX)
+promo = run_query(queries.QUERY_IMPACT_PROMOTIONS)
+pourcentage_diff = round(((promo["CA_Moyen"][0] - promo["CA_Moyen"][1]) / promo["CA_Moyen"][1]) * 100, 2)
+
+df = run_query(queries.QUERY_TYPES_VALIDATION)
+
+corr = df['Size'].corr(df['CA_Moyen'])
 
 # Affichage en colonnes
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(render_kpi_card("💰 CA Total", f"${kpi_df['CA_Total'][0]/1_000_000:.2f}M"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("💰 CA Total", f"{pourcentage_diff}%"),unsafe_allow_html=True)
     
 with col2:
-    st.markdown(render_kpi_card("🏪 Magasins", f"{kpi_df['Nb_Magasins'][0]}"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("🏪 Magasins", f"{corr}"),unsafe_allow_html=True)
     
 with col3:
     st.markdown(render_kpi_card("📦 Départements", f"{kpi_df['Nb_Departements'][0]}"),unsafe_allow_html=True)

@@ -31,9 +31,9 @@ La taille explique une grande partie des écarts de performance observés.
 
 departements_intro = """
 ### Points clés – Analyse des départements
-- Objectif : analyser la performance des départements et leur contribution au chiffre d’affaires.
-- Méthodologie : agrégation par département, comparaison par type de magasin et visualisations (top, heatmaps).
-- À retenir : certains départements sont systématiquement performants et méritent une attention prioritaire.
+- Les départements ayant le plus fort CA varient selon le type de magasin.
+- Les magasins de type A et C partagent des départements performants quasi similaires, tandis que le type B diffère.
+- Certains départements sont performants quel que soit le type de magasin, suggérant des « départements universels ».
 """
 
 
@@ -56,12 +56,10 @@ La taille du magasin influence directement les départements qui génèrent le p
 
 temporel_intro = """
 ### Points clés – Analyse Temporelle
-- Objectif : identifier les tendances et effets saisonniers sur les ventes (mensualités, pics de fin d'année).
-- Méthodologie : comparaison du mois de décembre vs moyenne annuelle, évolutions par type et par département.
-- À retenir : une saisonnalité marquée en fin d'année pour certains départements, à intégrer dans la gestion des stocks et stratégies commerciales.
+- Les tendances temporelles diffèrent selon le type de magasin.
+- La hausse des ventes pour les magasins du type A en fin d’année est principalement portée par un nombre limité de départements.
+- Sur le top 10 des départements des magasins de type A, une saisonnalité marquée est observée en novembre et décembre.
 """
-
-
 
 temporel_type = """
 **Insight clé :**  
@@ -83,9 +81,7 @@ Elle est principalement portée par un nombre limité de départements, regroup�
 
 temporel_dept_a = """
 **Insight clé :**  
-Le top 10 des départements des magasins de type A connaît une augmentation significative des ventes en novembre et décembre.
-
-Cette saisonnalité forte doit être prise en compte dans la gestion des stocks et les stratégies commerciales.
+Les départements qui varient le plus en décembres varient également en novembre.
 """
 
 
