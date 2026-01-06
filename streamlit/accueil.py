@@ -18,27 +18,21 @@ render_navbar(st, current_page="resume")
 
 # Titre principal
 
-promo = run_query(queries.QUERY_IMPACT_PROMOTIONS)
-pourcentage_diff = round(((promo["CA_Moyen"][0] - promo["CA_Moyen"][1]) / promo["CA_Moyen"][1]) * 100, 2)
-
-df = run_query(queries.QUERY_TYPES_VALIDATION)
-
-corr = df['Taille_Moyenne'].corr(df['CA_Moyen'])
 
 # Affichage en colonnes
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.markdown(render_kpi_card("💰 CA Total", f"{pourcentage_diff}%"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("Différences CA promo", "1.92%"),unsafe_allow_html=True)
     
 with col2:
-    st.markdown(render_kpi_card("🏪 Magasins", f"{corr}"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("TOP département", "95"),unsafe_allow_html=True)
     
 with col3:
-    st.markdown(render_kpi_card("📦 Départements", f"{kpi_df['Nb_Departements'][0]}"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("TOP 5 Départements communs A et C", "92,95,90,38"),unsafe_allow_html=True)
     
 with col4:
-    st.markdown(render_kpi_card("📅 Période", f"{kpi_df['Date_Debut'][0][:4]} - {kpi_df['Date_Fin'][0][:4]}"),unsafe_allow_html=True)
+    st.markdown(render_kpi_card("Différence CA décembre type A", "10%"),unsafe_allow_html=True)
 
 
 
@@ -53,22 +47,9 @@ with chart_row1[0]:
     st.plotly_chart(visuel.plot_performance_by_type(run_query(queries.QUERY_TAILLE_PERF)), use_container_width=True)
 
 with chart_row1[1]:
-    # Heatmap du CA par Type de departement pour le Type de magasin A
-    st.plotly_chart(visuel.plot_heatmap_by_type(run_query(queries.QUERY_HEATMAP_DATA), store_type='A'), use_container_width=True)
-
-chart_row2 = st.columns(2, gap="large")
-
-with chart_row2[0]:
     # Évolution Temporelle des Types de Magasins
     st.plotly_chart(visuel.plot_evolution_temporelle_types(run_query(queries.QUERY_EVOL_TEMP_TYPE)), use_container_width=True)
 
-with chart_row2[1]:
-    # Évolution des Top Départements
-    top_depts_df = run_query(queries.QUERY_GET_TOP10) 
-    top_depts = top_depts_df['Dept'].tolist() 
-    query_temporal = queries.get_query_top_depts_temporel(top_depts)  
-    dept_temporal_df = run_query(query_temporal) 
-    st.plotly_chart(visuel.plot_evolution_top_departements(dept_temporal_df, top_depts), use_container_width=True) 
 
 
 
