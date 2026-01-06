@@ -4,9 +4,9 @@ This project analyzes retail store performance using transactional sales data, w
 
 ## Project Overview
 The analysis is delivered through:
-- an interactive Streamlit dashboard (FRENCH) for business exploration,
-- a Jupyter notebook (FRENCH) detailing the analytical approach,
-- and a PDF executive summary (ENGLISH) focused on insights and recommendations.
+- an interactive [Streamlit dashboard (FRENCH)](https://projet-magasin.streamlit.app/) for business exploration,
+- a [Jupyter notebook (FRENCH)](https://github.com/barnabew/projet_magasin/blob/main/projet_magasin.ipynb) detailing the analytical approach,
+- and a [PDF executive summary (ENGLISH)](https://github.com/barnabew/projet_magasin/blob/main/Retail%20-%20Report.pdf) focused on insights and recommendations.
 
 ## Key Findings
 Several structural patterns emerge from the data:
